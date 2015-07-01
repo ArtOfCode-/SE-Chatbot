@@ -247,23 +247,23 @@ class Chatbot:
             args.append(to_translate)
         commands_to_use = self.commands.copy()
         if cmd_name in commands_to_use:
-            return commands_to_use[cmd_name](args, msg, event)
+            return commands_to_use[cmd_name](args, msg, event, self)
 
         elif cmd_name in self.owner_commands:
             if msg is None or event.user.id in self.owner_ids:
-                return self.owner_commands[cmd_name](args, msg, event)
+                return self.owner_commands[cmd_name](args, msg, event, self)
             else:
                 return "You don't have the privilege to execute this command."
         elif cmd_name in self.privileged_commands:
             if msg is None or event.user.id in self.privileged_user_ids or event.user.id in self.owner_ids:
-                return self.privileged_commands[cmd_name](args, msg, event)
+                return self.privileged_commands[cmd_name](args, msg, event, self)
             else:
                 return "You don't have the privilege to execute this command."
         else:
             return "Command not found."
                 
-    def command_stop(self, args, msg, event):
-        SaveIO.save(SaveIO.path, Points.Points)
+    def command_stop(self, args, msg, event, chatbot):
+        Points.close()
         self.enabled = False
         self.running = False
         if msg is not None:
@@ -274,16 +274,16 @@ class Chatbot:
         time.sleep(5)
         os._exit(0)
         
-    def command_disable(self, args, msg, event):
+    def command_disable(self, args, msg, event, chatbot):
         self.enabled = False
         return "Bot disabled, run >>enable to enable it again."
         
-    def command_enable(self, args, msg, event):
+    def command_enable(self, args, msg, event, chatbot):
         self.enabled = True
         return "Bot enabled."
 
     
-    def command_ban(self, args, msg, event):
+    def command_ban(self, args, msg, event, chatbot):
         try:
             banned_user = int(args[0])
         except ValueError:
@@ -302,7 +302,7 @@ class Chatbot:
             pickle.dump(self.banned, f)
         return "User @%s has been banned." % user_name
             
-    def command_unban(self, args, msg, event):
+    def command_unban(self, args, msg, event, chatbot):
         try:
             banned_user = int(args[0])
         except ValueError:
@@ -320,12 +320,12 @@ class Chatbot:
             pickle.dump(self.banned, f)
         return "User @%s has been unbanned." % user_name
     
-    def command_listcommands(self, args, msg, event):
+    def command_listcommands(self, args, msg, event, chatbot):
         command_keys = self.commands.keys()
         command_keys.sort()
         return "Commands: %s" % (", ".join(command_keys),)
 
-    def command_help(self, args, msg, event):
+    def command_help(self, args, msg, event, chatbot):
         if len(args) == 0:
             return "I'm %s, %s's chatbot. You can find the source code [on GitHub](https://github.com/ProgramFOX/SE-Chatbot). You can get a list of all commands by running `>>listcommands`, or you can run `>>help command` to learn more about a specific command." % (self.chatbot_name, self.owner_name)
         command_to_look_up = args[0]
@@ -337,7 +337,7 @@ class Chatbot:
         else:
             return "The command you want to look up, does not exist."
 
-    def command_delete(self, args, msg, event):
+    def command_delete(self, args, msg, event, chatbot):
         if len(args) == 0:
             return "Not enough arguments."
         try:
@@ -351,7 +351,7 @@ class Chatbot:
             pass
 
 
-    def command_translationchain(self, args, msg, event):
+    def command_translationchain(self, args, msg, event, chatbot):
         if event.user.id not in self.owner_ids:
             return "The `translationchain` command is a command that posts many messages and it does not post all messages, and causes that some messages that have to be posted after the chain might not be posted, so it is an owner-only command now."
         if len(args) < 4:
@@ -371,7 +371,7 @@ class Chatbot:
         else:
             return "There is already a translation chain going on."
 
-    def command_translationswitch(self, args, msg, event):
+    def command_translationswitch(self, args, msg, event, chatbot):
         if event.user.id not in self.owner_ids:
             return "The `translationswitch` command is a command that posts many messages and it does not post all messages, and causes that some messages that have to be posted after the chain might not be posted, so it is an owner-only command now."
         if self.translation_switch_going_on:
@@ -392,7 +392,7 @@ class Chatbot:
         thread.start_new_thread(self.translationswitch, (args[3], args[1], args[2], translation_count))
         return "Translation switch started. Translation made by [Google Translate](https://translate.google.com). Some messages in the switch might not be posted due to a reason I don't know."
 
-    def command_translate(self, args, msg, event):
+    def command_translate(self, args, msg, event, chatbot):
         if len(args) < 3:
             return "Not enough arguments."
         if args[0] == args[1]:

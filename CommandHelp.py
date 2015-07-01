@@ -34,5 +34,7 @@ CommandHelp = {
     "emptyqueue": "Owner-only command, and specific for Shadow's Den. Empties the spell queue by awarding all spells in it. Syntax: `>>emptyqueue`",
     "removespell": "Owner-only command, and specific to Shadow's Den. Removes (un-awards) a spell. Syntax: `>>removespell spell_id user_id`",
 
-    "delete": "Only for privileged users. Deletes a message of the bot. Syntax: `>>delete msg_id` or `<reply> !delete!`"
+    "delete": "Only for privileged users. Deletes a message of the bot. Syntax: `>>delete msg_id` or `<reply> !delete!`",
+	
+	"points": "Manages points. Syntax: `>>points give <user> <amount>` to give points, `>>points get` to view your points, `>>points get <user>` to view another user's points, `>>points star <id>` to star a message, and `>>points pin <id>` to pin a message."
 }

@@ -6,15 +6,16 @@ import Points
 
 Points.init()
 
-def command_alive(args, msg, event):
-    return "Yes, I'm alive."
+def command_alive(args, msg, event, chatbot):
+    possibles = ["Yes, I'm alive.", "Not dead yet.", "and kicking.", "Of course.", "Define *alive*.", "Well I'm a non-sentient computer program... how alive can I *really* be?", "Awaiting instruction.", "<sarcasm>No, I'm dead.</sarcasm>"]
+    return random.choice(possibles)
 
 
-def command_random(args, msg, event):
+def command_random(args, msg, event, chatbot):
     return str(random.random())
 
 
-def command_randomint(args, msg, event):
+def command_randomint(args, msg, event, chatbot):
     if len(args) == 0:
         return str(random.randint(0, sys.maxint))
     if len(args) == 1:
@@ -38,13 +39,13 @@ def command_randomint(args, msg, event):
     return "Too many arguments."
 
 
-def command_randomchoice(args, msg, event):
+def command_randomchoice(args, msg, event, chatbot):
     if len(args) < 1:
         return "Not enough arguments."
     return random.choice(args)
 
 
-def command_shuffle(args, msg, event):
+def command_shuffle(args, msg, event, chatbot):
     if len(args) < 1:
         return "Not enough arguments."
     list_to_shuffle = list(args)
@@ -52,15 +53,15 @@ def command_shuffle(args, msg, event):
     return " ".join(list_to_shuffle)
 
 
-def command_utc(args, msg, event):
+def command_utc(args, msg, event, chatbot):
     return datetime.utcnow().ctime()
 
 
-def command_xkcdrandomnumber(args, msg, event):
+def command_xkcdrandomnumber(args, msg, event, chatbot):
     return "[4 // Chosen by fair dice roll. Guaranteed to be random.](http://xkcd.com/221/)"
 
 
-def command_xkcd(args, msg, event):
+def command_xkcd(args, msg, event, chatbot):
     if len(args) < 1:
         return "Not enough arguments."
     try:
@@ -69,12 +70,18 @@ def command_xkcd(args, msg, event):
         return "Invalid arguments."
     return "http://xkcd.com/%i/" % id_
     
-def command_points(args, msg, event):
+def command_points(args, msg, event, chatbot):
     if len(args) < 1:
         return "Not enough arguments."
     if args[0] == "give":
-        return Points.give_points(args, msg, event)
+        return Points.give_points(args, msg, event, chatbot)
     elif args[0] == "get":
-        return Points.get_points(args, msg, event)
+        return Points.get_points(args, msg, event, chatbot)
     elif args[0] == "admin":
-        return Points.admin_points(args, msg, event)
+        return Points.admin_points(args, msg, event, chatbot)
+    elif args[0] == "star":
+        return Points.star(args, msg, event, chatbot)
+    elif args[0] == "pin":
+        return Points.pin(args, msg, event, chatbot)
+    else:
+        return "Command not found."
