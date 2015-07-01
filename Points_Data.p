@@ -4,5 +4,5 @@ p1
 I1000
 sVartofcode
 p2
-I1000
+L1000L
 s.

@@ -39,6 +39,11 @@ def change_points(user, amount, is_admin=False):
     if not is_admin:
         if Points[user.lower()] + amount < 0:
             return False
+        Points[user.lower()] += amount
+        try:
+            return "Changed points for " + user + " by " + str(amount) + ". New total: " + str(Points[user.lower()])
+        except:
+            return "An error occurred, but the points transfer *has* taken place."
     else:
         Points[user.lower()] += amount
         try:
@@ -131,5 +136,53 @@ def pin(args, msg, event, chatbot):
         id = int(id)
     except:
         return "Invalid arguments."
-    chatbot.client.get_message(id).pin()
+    message = chatbot.client.get_message(id)
+    if message.pinned or id in Pins:
+        return "This message has already been pinned."
+    message.pin()
     change_points(user, -100)
+    Pins[id] = user
+    
+def unstar(args, msg, event, chatbot, is_admin=False):
+    for i in Config.General["owners"]:
+        if event.user.id == i["stackexchange.com"]:
+            is_admin = True
+        else:
+            continue
+    if len(args) < 2:
+        return "Not enough arguments."
+    id = args[1]
+    user = event.user.name
+    try:
+        id = int(id)
+    except:
+        return "Invalid arguments."
+    message = chatbot.client.get_message(id)
+    if not message.starred_by_you:
+        return "This message isn't starred."
+    if Stars[id] not == user and not is_admin:
+        return "You cannot unstar a message someone else starred."
+    message.star(False)
+    del Stars[id]
+    
+def unpin(args, msg, event, chatbot, is_admin=False):
+    for i in Config.General["owners"]:
+        if event.user.id == i["stackexchange.com"]:
+            is_admin = True
+        else:
+            continue
+    if len(args) < 2:
+        return "Not enough arguments."
+    id = args[1]
+    user = event.user.name
+    try:
+        id = int(id)
+    except:
+        return "Invalid arguments."
+    message = chatbot.client.get_message(id)
+    if not message.pinned:
+        return "This message isn't starred."
+    if Pins[id] not == user and not is_admin:
+        return "You cannot unstar a message someone else starred."
+    message.pin(False)
+    del Pins[id]
