@@ -34,21 +34,17 @@ def close():
     SaveIO.save(SaveIO.pins_path, Pins)
 
 def change_points(user, amount, is_admin=False):
-<<<<<<< HEAD
-    if user not in Points:
-        Points[user] = 200
-    if Points[user] + amount < 0:
-        if not is_admin:
-=======
     if user.lower() not in Points:
         Points[user.lower()] = 200
     if not is_admin:
         if Points[user.lower()] + amount < 0:
->>>>>>> 0907240a0b2ed342b785936d5375e61d2dc4308b
             return False
     else:
         Points[user.lower()] += amount
-        return "Changed points for " + user + " by " + str(amount) + ". New total: " + str(Points[user])
+        try:
+            return "Changed points for " + user + " by " + str(amount) + ". New total: " + str(Points[user.lower()])
+        except:
+            return "An error occurred, but the points transfer *has* taken place."
         
 def give_points(args, msg, event, chatbot):
     if len(args) < 3:

@@ -83,5 +83,9 @@ def command_points(args, msg, event, chatbot):
         return Points.star(args, msg, event, chatbot)
     elif args[0] == "pin":
         return Points.pin(args, msg, event, chatbot)
+    elif args[0] == "unstar":
+        return Points.unstar(args, msg, event, chatbot)
+    elif args[0] == "unpin":
+        return Points.unstar(args, msg, event, chatbot)
     else:
         return "Command not found."
