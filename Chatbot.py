@@ -201,10 +201,6 @@ class Chatbot:
             return
 
         content = re.sub(r"^>>\s+", ">>", content)
-        if not content.startswith(">>"):
-            content = re.sub(r"([:;][-']?[)/(DPdpoO\[\]\\|])", "", content) # strip smilies
-            content = re.sub(r"\[(.+?)\]\(.+?\)", r"\1", content)
-            content = re.sub(r"\(.+?\)", "", content)
         content = re.sub(r"\s+", " ", content)
         content = content.strip()
         parts = content.split(" ")
