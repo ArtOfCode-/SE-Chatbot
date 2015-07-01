@@ -4,7 +4,7 @@ import SaveIO
 Points = {
     # "username": 100
     # Format is key username: value points
-    "KarmaBot": 9999999999999999999999
+    "karmabot": 9999999999999999999999
 }
 
 Stars = {
@@ -34,13 +34,20 @@ def close():
     SaveIO.save(SaveIO.pins_path, Pins)
 
 def change_points(user, amount, is_admin=False):
+<<<<<<< HEAD
     if user not in Points:
         Points[user] = 200
     if Points[user] + amount < 0:
         if not is_admin:
+=======
+    if user.lower() not in Points:
+        Points[user.lower()] = 200
+    if not is_admin:
+        if Points[user.lower()] + amount < 0:
+>>>>>>> 0907240a0b2ed342b785936d5375e61d2dc4308b
             return False
     else:
-        Points[user] += amount
+        Points[user.lower()] += amount
         return "Changed points for " + user + " by " + str(amount) + ". New total: " + str(Points[user])
         
 def give_points(args, msg, event, chatbot):
@@ -95,10 +102,10 @@ def get_points(args, msg, event, chatbot):
         user = event.user.name
     elif len(args) >= 2:
         user = args[1]
-    if user in Points:
-        return str(Points[user])
+    if user.lower() in Points:
+        return str(Points[user.lower()])
     else:
-        Points[user] = 200
+        Points[user.lower()] = 200
         return "200"
 
 def star(args, msg, event, chatbot):
